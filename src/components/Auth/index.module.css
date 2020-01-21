@@ -9,5 +9,9 @@
 .input-container {
   display: flex;
   flex-direction: column;
-  padding: 50px;
+  padding: 40px;
+}
+
+.image {
+  height: min-content;
 }

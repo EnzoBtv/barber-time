@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { makeStyles, Typography } from "@material-ui/core";
 
 import Auth from "../../components/Auth";
@@ -18,6 +19,9 @@ const styles = makeStyles({
   text: {
     color: "#e61b23",
     cursor: "pointer"
+  },
+  link: {
+    textDecoration: "none"
   }
 });
 
@@ -29,7 +33,9 @@ const Login: React.FC = () => {
       <Input label="Senha" type="password" />
       <Button>Entrar</Button>
       <div className={classes["options-container"]}>
-        <Typography className={materialClasses["text"]}>Cadastrar</Typography>
+        <Link className={materialClasses["link"]} to="/register">
+          <Typography className={materialClasses["text"]}>Cadastrar</Typography>
+        </Link>
         <Typography className={materialClasses["text"]}>
           Recuperar senha
         </Typography>
