@@ -20,6 +20,7 @@ const styles = makeStyles({
 
 const Auth: React.FC<{
   arrowBack?: () => void;
+  style?: { [key: string]: any };
 }> = props => {
   const materialClasses = styles();
 
@@ -33,7 +34,9 @@ const Auth: React.FC<{
           />
         ) : null}
         <img className={classes["image"]} src="/logo.png" alt="logo" />
-        <div className={classes["input-container"]}>{props.children}</div>
+        <div className={classes["input-container"]} style={props.style}>
+          {props.children}
+        </div>
       </Card>
     </div>
   );
