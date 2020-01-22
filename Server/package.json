@@ -2,5 +2,18 @@
   "name": "barber-time",
   "version": "1.0.0",
   "main": "index.js",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "pg": "^7.17.1",
+    "pg-hstore": "^2.3.3",
+    "sequelize": "^5.21.3"
+  },
+  "devDependencies": {
+    "@types/node": "^13.1.8",
+    "sequelize-cli": "^3.2.0-c",
+    "@types/sequelize": "^4.28.8"
+  }
 }
