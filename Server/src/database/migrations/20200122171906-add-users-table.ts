@@ -23,8 +23,16 @@ module.exports = {
                 allowNull: false
             },
             type: {
-                type: DataTypes.STRING,
+                type: DataTypes.ENUM,
                 values: ["barber", "client"]
+            },
+            created_at: {
+                type: DataTypes.DATE,
+                allowNull: false
+            },
+            updated_at: {
+                type: DataTypes.DATE,
+                allowNull: false
             }
         });
     },

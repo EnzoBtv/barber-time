@@ -1,7 +1,6 @@
 import Express, { Application } from "express";
 import { join } from "path";
 import { execPromise as exec } from "../util/ChildPromise";
-import "../database";
 
 export default class Server {
     app: Application;
