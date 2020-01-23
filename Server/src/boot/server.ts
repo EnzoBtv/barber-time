@@ -14,11 +14,14 @@ export default class Server {
     }
 
     listen() {
-        this.app.listen(process.env.PORT);
+        this.app.listen(process.env.PORT, () => {
+            console.log(`App listening on port ${process.env.PORT}`);
+        });
     }
 
     async initControllers() {
         try {
+            console.log("Trying no initialize all controllers");
             const controllers = await exec(
                 `ls ${join(__dirname, "..", "controllers")}`,
                 {}
@@ -28,19 +31,23 @@ export default class Server {
                 const controllerArray = stdout.split("\n");
                 for (const controller of controllerArray) {
                     if (controller) {
-                        console.log(controller);
+                        console.log(`Initilizing ${controller} Controller`);
                         const reqController = require(join(
                             __dirname,
                             "..",
                             "controllers",
                             controller
                         ));
-                        this.app.use(reqController.router);
+                        this.app.use(new reqController.default().router);
                     }
                 }
             }
         } catch (ex) {
-            throw new Error(JSON.stringify(ex));
+            throw new Error(
+                `It wasn't possible to initialize the controllers, error: ${JSON.stringify(
+                    ex
+                )}`
+            );
         }
     }
 }
