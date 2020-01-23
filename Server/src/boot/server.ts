@@ -1,4 +1,4 @@
-import Express, { Application } from "express";
+import Express, { Application, json } from "express";
 import { join } from "path";
 import logger from "../util/Logger";
 import { execPromise as exec } from "../util/ChildPromise";
@@ -9,6 +9,7 @@ export default class Server {
         this.app = Express();
         (async () => {
             this.listen();
+            this.initMiddlewares();
             await this.initControllers();
         })();
     }
@@ -17,6 +18,10 @@ export default class Server {
         this.app.listen(process.env.PORT, () => {
             logger.info(`App listening on port ${process.env.PORT}`);
         });
+    }
+
+    async initMiddlewares() {
+        this.app.use(json());
     }
 
     async initControllers() {

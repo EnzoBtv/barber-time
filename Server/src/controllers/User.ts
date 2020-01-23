@@ -11,15 +11,16 @@ export default class UserController {
     router: Router;
     path: string;
     constructor() {
-        this.path = "/user";
+        this.path = "/users";
         this.router = Router();
+        this.init();
     }
 
     init() {
-        this.router.post(this.path, this.create);
+        this.router.post(this.path, this.store);
     }
 
-    async create(req: Request, res: Response) {
+    async store(req: Request, res: Response) {
         try {
             const { email, name, type, password } = req.body;
 
