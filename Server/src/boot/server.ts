@@ -1,5 +1,6 @@
 import Express, { Application } from "express";
 import { join } from "path";
+import logger from "../util/Logger";
 import { execPromise as exec } from "../util/ChildPromise";
 
 export default class Server {
@@ -14,13 +15,13 @@ export default class Server {
 
     listen() {
         this.app.listen(process.env.PORT, () => {
-            console.log(`App listening on port ${process.env.PORT}`);
+            logger.info(`App listening on port ${process.env.PORT}`);
         });
     }
 
     async initControllers() {
         try {
-            console.log("Trying no initialize all controllers");
+            logger.info("Trying no initialize all controllers");
             const controllers = await exec(
                 `ls ${join(__dirname, "..", "controllers")}`,
                 {}
@@ -30,7 +31,7 @@ export default class Server {
                 const controllerArray = stdout.split("\n");
                 for (const controller of controllerArray) {
                     if (controller) {
-                        console.log(`Initilizing ${controller} Controller`);
+                        logger.info(`Initilizing ${controller} Controller`);
                         const reqController = require(join(
                             __dirname,
                             "..",
@@ -42,11 +43,12 @@ export default class Server {
                 }
             }
         } catch (ex) {
-            throw new Error(
+            logger.error(
                 `It wasn't possible to initialize the controllers, error: ${JSON.stringify(
                     ex
                 )}`
             );
+            throw new Error(JSON.stringify(ex));
         }
     }
 }
