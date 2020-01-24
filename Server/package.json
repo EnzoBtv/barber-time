@@ -13,6 +13,8 @@
         "jsonwebtoken": "^8.5.1",
         "pg": "^7.17.1",
         "pg-hstore": "^2.3.3",
+        "request": "^2.88.0",
+        "request-promise": "^4.2.5",
         "sequelize": "^5.21.3",
         "winston": "^3.2.1"
     },
@@ -21,6 +23,8 @@
         "@types/jest": "^24.9.1",
         "@types/jsonwebtoken": "^8.3.7",
         "@types/node": "^13.1.8",
+        "@types/request": "^2.48.4",
+        "@types/request-promise": "^4.1.45",
         "@types/sequelize": "^4.28.8",
         "sequelize-cli": "^3.2.0-c"
     },

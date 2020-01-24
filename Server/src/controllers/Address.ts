@@ -1,4 +1,5 @@
 import { Router, Request, Response } from "express";
+import RequestP from "request-promise";
 import User from "../models/User";
 
 import { Status } from "../constants/Status";
@@ -8,6 +9,8 @@ const { BAD_REQUEST, SUCCESS, INTERNAL_SERVER_ERROR, NOT_FOUND } = Status;
 import privateRoute from "../middlewares/Private";
 
 import logger from "../util/Logger";
+
+import { ViaCep, AddressDB } from "../typings/Address";
 
 export default class AddressController {
     router: Router;
@@ -19,7 +22,8 @@ export default class AddressController {
     }
 
     init() {
-        this.router.put(this.path, privateRoute, this.store);
+        this.router.post(this.path, privateRoute, this.store);
+        this.router.get(`${this.path}/cep`, privateRoute);
     }
 
     async store(req: Request, res: Response) {
@@ -78,7 +82,35 @@ export default class AddressController {
         }
     }
 
-    async show(req: Response, res: Response) {
-        console.log(req, res);
+    async show(req: Request, res: Response) {
+        try {
+            const { cep } = req.body;
+
+            if (!cep) {
+                logger.error("CEP find failed, missing parameters");
+                return res.status(BAD_REQUEST).json({
+                    error: "Estão faltando parâmetros na requisição"
+                });
+            }
+            const address: ViaCep = <ViaCep>(<unknown>RequestP({
+                url: `https://viacep.com.br/ws/${cep}/json/`,
+                method: "GET",
+                rejectUnauthorized: true
+            }));
+            const responseObj = {
+                zipCode: address.cep,
+                street: address.logradouro,
+                complement: address.complemento,
+                city: address.localidade,
+                state: address.uf
+            } as AddressDB;
+
+            return res.status(SUCCESS).json(responseObj);
+        } catch (ex) {
+            logger.error(`CEP find failed | Error ${ex.message}`);
+            return res
+                .status(INTERNAL_SERVER_ERROR)
+                .json({ error: ex.message });
+        }
     }
 }

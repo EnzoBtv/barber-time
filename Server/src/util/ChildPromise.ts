@@ -1,6 +1,6 @@
 import { exec, ExecOptions, ExecException } from "child_process";
 
-import { ExecError, ExecSuccess } from "../interfaces/Exec";
+import { ExecError, ExecSuccess } from "../typings/Exec";
 
 export const execPromise = (
     command: string,
