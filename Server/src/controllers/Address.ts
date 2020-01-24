@@ -3,7 +3,7 @@ import User from "../models/User";
 
 import { Status } from "../constants/Status";
 
-const { BAD_REQUEST, SUCCESS, INTERNAL_SERVER_ERROR, CONFLICT } = Status;
+const { BAD_REQUEST, SUCCESS, INTERNAL_SERVER_ERROR, NOT_FOUND } = Status;
 
 import privateRoute from "../middlewares/Private";
 
@@ -13,7 +13,7 @@ export default class AddressController {
     router: Router;
     path: string;
     constructor() {
-        this.path = "/barbers";
+        this.path = "/addresses";
         this.router = Router();
         this.init();
     }
@@ -24,7 +24,7 @@ export default class AddressController {
 
     async store(req: Request, res: Response) {
         try {
-            const { _id } = req;
+            const { id } = req;
             const {
                 zipCode,
                 street,
@@ -35,13 +35,41 @@ export default class AddressController {
             } = req.body;
 
             if (!zipCode || !street || !number || !city || !state) {
-                logger.error("Barber update failed, missing parameters");
+                logger.error("Address creation failed, missing parameters");
                 return res.status(BAD_REQUEST).json({
                     error: "Estão faltando parâmetros na requisição"
                 });
             }
+            const user = await User.findByPk(id);
 
-            console.log(_id, complement, req, User, SUCCESS, CONFLICT);
+            if (!user) {
+                logger.error("Address creation failed, user not found in db");
+                return res.status(NOT_FOUND).json({
+                    error:
+                        "Usuário não encontrado no banco de dados, por favor, entre em contato com o suporte"
+                });
+            }
+
+            const address = await user.createAddress({
+                zipCode,
+                street,
+                number,
+                complement,
+                city,
+                state
+            });
+
+            if (!address) {
+                logger.error(
+                    "Address creation failed, not possible to create address"
+                );
+                return res.status(NOT_FOUND).json({
+                    error:
+                        "Não foi possível cadastrar o endereço no banco de dados, entre em contato com o suporte"
+                });
+            }
+
+            res.status(SUCCESS).json(address);
         } catch (ex) {
             logger.error(`Error creating user | Error ${ex.message}`);
             return res

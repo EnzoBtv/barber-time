@@ -8,6 +8,6 @@ declare namespace NodeJS {
 declare namespace Express {
     export interface Request {
         email?: string;
-        _id?: string;
+        id?: number;
     }
 }

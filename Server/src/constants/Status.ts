@@ -3,5 +3,6 @@ export enum Status {
     BAD_REQUEST = 400,
     INTERNAL_SERVER_ERROR = 500,
     CONFLICT = 409,
-    UNAUTHORIZED = 401
+    UNAUTHORIZED = 401,
+    NOT_FOUND = 404
 }

@@ -29,7 +29,7 @@ export default function auth(
         );
         if (typeof decoded !== "string") {
             request.email = decoded.email;
-            request._id = decoded._id;
+            request.id = decoded.id;
         }
 
         next();
