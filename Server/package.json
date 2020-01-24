@@ -15,12 +15,14 @@
     },
     "devDependencies": {
         "@types/express": "^4.17.2",
+        "@types/jest": "^24.9.1",
         "@types/node": "^13.1.8",
         "@types/sequelize": "^4.28.8",
         "sequelize-cli": "^3.2.0-c"
     },
     "scripts": {
-        "start": "if test -d ~/Documents/barber-time/Server/dist; then rm -R ./dist; fi; tsc; node ./dist"
+        "start": "if test -d ~/Documents/barber-time/Server/dist; then rm -R ./dist; fi; tsc; node ./dist",
+        "test": "jest"
     },
     "prettier": {
         "tabWidth": 4
