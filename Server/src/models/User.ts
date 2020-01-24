@@ -8,7 +8,9 @@ import {
     HasManyCountAssociationsMixin,
     HasManyCreateAssociationMixin
 } from "sequelize";
+
 import Address from "./Address";
+import Token from "./Token";
 import connection from "../database";
 
 export default class User extends Model {
@@ -27,10 +29,18 @@ export default class User extends Model {
     public countAddresses!: HasManyCountAssociationsMixin;
     public createAddress!: HasManyCreateAssociationMixin<Address>;
 
+    public getTokens!: HasManyGetAssociationsMixin<Token>;
+    public addToken!: HasManyAddAssociationMixin<Token, number>;
+    public hasToken!: HasManyHasAssociationMixin<Token, number>;
+    public countTokens!: HasManyCountAssociationsMixin;
+    public createTokens!: HasManyCreateAssociationMixin<Token>;
+
     public readonly addresses?: Address[];
+    public readonly tokens?: Token[];
 
     public static associations: {
         addresses: Association<User, Address>;
+        tokens: Association<User, Token>;
     };
 }
 
@@ -70,4 +80,10 @@ User.hasMany(Address, {
     sourceKey: "id",
     foreignKey: "user_id",
     as: "addresses"
+});
+
+User.hasMany(Token, {
+    sourceKey: "id",
+    foreignKey: "user_id",
+    as: "tokens"
 });

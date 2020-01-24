@@ -3,7 +3,7 @@ import { verify } from "jsonwebtoken";
 
 import logger from "../util/Logger";
 
-import { TokenObject } from "../interfaces/Token";
+import { TokenObject } from "../typings/Token";
 
 import { Status } from "../constants/Status";
 
