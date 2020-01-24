@@ -97,13 +97,13 @@ export default class AddressController {
                 method: "GET",
                 rejectUnauthorized: true
             }));
-            const responseObj = {
+            const responseObj: AddressDB = {
                 zipCode: address.cep,
                 street: address.logradouro,
                 complement: address.complemento,
                 city: address.localidade,
                 state: address.uf
-            } as AddressDB;
+            };
 
             return res.status(SUCCESS).json(responseObj);
         } catch (ex) {
