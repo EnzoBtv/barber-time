@@ -6,6 +6,7 @@ import { Status } from "../constants/Status";
 const { BAD_REQUEST, SUCCESS, INTERNAL_SERVER_ERROR, CONFLICT } = Status;
 
 import logger from "../util/Logger";
+import Password from "../util/Password";
 
 export default class UserController {
     router: Router;
@@ -41,19 +42,18 @@ export default class UserController {
                 logger.error(
                     "User creation failed, there's already an user registered with this email"
                 );
-                return res
-                    .status(CONFLICT)
-                    .json({
-                        error:
-                            "Não foi possível criar o usuário pois já existe outro com o mesmo email"
-                    });
+                return res.status(CONFLICT).json({
+                    error:
+                        "Não foi possível criar o usuário pois já existe outro com o mesmo email"
+                });
             }
 
+            const hashedPassword = new Password(password).inputPassword;
             const user = await User.create({
                 name,
                 email,
                 type,
-                password
+                password: hashedPassword
             });
 
             if (!user) {
