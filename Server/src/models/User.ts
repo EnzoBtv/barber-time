@@ -1,5 +1,14 @@
-import { Model, DataTypes } from "sequelize";
-
+import {
+    Model,
+    DataTypes,
+    Association,
+    HasManyGetAssociationsMixin,
+    HasManyAddAssociationMixin,
+    HasManyHasAssociationMixin,
+    HasManyCountAssociationsMixin,
+    HasManyCreateAssociationMixin
+} from "sequelize";
+import Address from "./Address";
 import connection from "../database";
 
 class User extends Model {
@@ -11,6 +20,18 @@ class User extends Model {
 
     public readonly created_at!: Date;
     public readonly updated_at!: Date;
+
+    public getAddresses!: HasManyGetAssociationsMixin<Address>;
+    public addAddress!: HasManyAddAssociationMixin<Address, number>;
+    public hasAddress!: HasManyHasAssociationMixin<Address, number>;
+    public countAddresses!: HasManyCountAssociationsMixin;
+    public createAddress!: HasManyCreateAssociationMixin<Address>;
+
+    public readonly addresses?: Address[];
+
+    public static associations: {
+        addresses: Association<User, Address>;
+    };
 }
 
 User.init(
@@ -40,8 +61,15 @@ User.init(
         }
     },
     {
-        sequelize: connection
+        sequelize: connection,
+        tableName: "users"
     }
 );
+
+User.hasMany(Address, {
+    sourceKey: "id",
+    foreignKey: "user_id",
+    as: "addresses"
+});
 
 export default User;
