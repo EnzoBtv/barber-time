@@ -11,7 +11,7 @@ import {
 import Address from "./Address";
 import connection from "../database";
 
-class User extends Model {
+export default class User extends Model {
     public id!: number;
     public name!: string;
     public email!: string;
@@ -71,5 +71,3 @@ User.hasMany(Address, {
     foreignKey: "user_id",
     as: "addresses"
 });
-
-export default User;

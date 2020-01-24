@@ -1,10 +1,8 @@
 import { Model, DataTypes } from "sequelize";
 
-import User from "./User";
-
 import connection from "../database";
 
-class Address extends Model {
+export default class Address extends Model {
     public id!: number;
     public zipCode!: string;
     public city!: string;
@@ -51,7 +49,3 @@ Address.init(
         tableName: "addresses"
     }
 );
-
-Address.belongsTo(User, { targetKey: "id" });
-
-export default Address;

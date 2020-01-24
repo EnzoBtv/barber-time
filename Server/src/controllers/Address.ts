@@ -9,7 +9,7 @@ import privateRoute from "../middlewares/Private";
 
 import logger from "../util/Logger";
 
-export default class UserController {
+export default class AddressController {
     router: Router;
     path: string;
     constructor() {
@@ -40,6 +40,8 @@ export default class UserController {
                     error: "Estão faltando parâmetros na requisição"
                 });
             }
+
+            console.log(_id, complement, req, User, SUCCESS, CONFLICT);
         } catch (ex) {
             logger.error(`Error creating user | Error ${ex.message}`);
             return res
@@ -48,5 +50,7 @@ export default class UserController {
         }
     }
 
-    async show(req: Response, res: Response) {}
+    async show(req: Response, res: Response) {
+        console.log(req, res);
+    }
 }
