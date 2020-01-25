@@ -5,6 +5,7 @@ export default class Token extends Model {
     public id!: number;
     public ip!: string;
     public token!: string;
+    public type!: string;
 
     public readonly created_at!: Date;
     public readonly updated_at!: Date;
@@ -23,6 +24,10 @@ Token.init(
             allowNull: false
         },
         token: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
+        type: {
             type: DataTypes.STRING,
             allowNull: false
         }

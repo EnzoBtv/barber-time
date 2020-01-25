@@ -5,7 +5,7 @@ import logger from "../util/Logger";
 
 import { TokenObject } from "../typings/Token";
 
-import { Status } from "../constants/Status";
+import { Status } from "../typings/Status";
 
 const { UNAUTHORIZED } = Status;
 

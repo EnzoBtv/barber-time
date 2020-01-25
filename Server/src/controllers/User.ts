@@ -1,7 +1,7 @@
 import { Router, Request, Response } from "express";
 import User from "../models/User";
 
-import { Status } from "../constants/Status";
+import { Status } from "../typings/Status";
 
 const { BAD_REQUEST, SUCCESS, INTERNAL_SERVER_ERROR, CONFLICT } = Status;
 

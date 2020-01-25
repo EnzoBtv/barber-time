@@ -1,8 +1,10 @@
 import { Router, Request, Response } from "express";
 import RequestP from "request-promise";
-import User from "../models/User";
 
-import { Status } from "../constants/Status";
+import User from "../models/User";
+import Address from "../models/Address";
+
+import { Status } from "../typings/Status";
 
 const { BAD_REQUEST, SUCCESS, INTERNAL_SERVER_ERROR, NOT_FOUND } = Status;
 
@@ -53,8 +55,7 @@ export default class AddressController {
                         "Usuário não encontrado no banco de dados, por favor, entre em contato com o suporte"
                 });
             }
-
-            const address = await user.createAddress({
+            const address = await Address.create({
                 zipCode,
                 street,
                 number,
@@ -62,6 +63,8 @@ export default class AddressController {
                 city,
                 state
             });
+
+            await user.addAddress(address);
 
             if (!address) {
                 logger.error(

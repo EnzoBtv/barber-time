@@ -3,9 +3,10 @@ import { sign } from "jsonwebtoken";
 import User from "../models/User";
 import Token from "../models/Token";
 
-import { Status } from "../constants/Status";
-
+import { Status } from "../typings/Status";
+import { TokenType } from "../typings/Token";
 const { BAD_REQUEST, SUCCESS, INTERNAL_SERVER_ERROR, NOT_FOUND } = Status;
+const { AUTH } = TokenType;
 
 import logger from "../util/Logger";
 import Password from "../util/Password";
@@ -72,21 +73,24 @@ export default class AddressController {
                 }
             );
 
-            const tokenDb = await Token.create({
-                ip,
-                token
+            const oldToken = await Token.findOne({
+                where: {
+                    user_id: user.id,
+                    type: AUTH
+                }
             });
 
-            await user.addToken(tokenDb);
-
-            if (!tokenDb) {
-                logger.error(
-                    `Error creating session, it wasn't possible to create the token`
-                );
-                return res.status(BAD_REQUEST).json({
-                    error:
-                        "Não foi possível gerar o token de logxin, por favor, entre em contato com o suporte"
+            if (oldToken) {
+                oldToken.token = token;
+                await oldToken.save();
+            } else {
+                const tokenDb = await Token.create({
+                    ip,
+                    token,
+                    type: AUTH
                 });
+
+                await user.addToken(tokenDb);
             }
 
             return res.status(SUCCESS).json({ token });
