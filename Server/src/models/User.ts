@@ -27,13 +27,13 @@ export default class User extends Model {
     public addAddress!: HasManyAddAssociationMixin<Address, number>;
     public hasAddress!: HasManyHasAssociationMixin<Address, number>;
     public countAddresses!: HasManyCountAssociationsMixin;
-    public createAddress!: HasManyCreateAssociationMixin<Address>;
+    public addAddresses!: HasManyCreateAssociationMixin<Address>;
 
     public getTokens!: HasManyGetAssociationsMixin<Token>;
     public addToken!: HasManyAddAssociationMixin<Token, number>;
     public hasToken!: HasManyHasAssociationMixin<Token, number>;
     public countTokens!: HasManyCountAssociationsMixin;
-    public createTokens!: HasManyCreateAssociationMixin<Token>;
+    public addTokens!: HasManyCreateAssociationMixin<Token>;
 
     public readonly addresses?: Address[];
     public readonly tokens?: Token[];

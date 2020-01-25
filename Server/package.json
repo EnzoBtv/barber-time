@@ -26,10 +26,11 @@
         "@types/request": "^2.48.4",
         "@types/request-promise": "^4.1.45",
         "@types/sequelize": "^4.28.8",
-        "sequelize-cli": "^3.2.0-c"
+        "sequelize-cli": "^3.2.0-c",
+        "typescript": "^3.7.5"
     },
     "scripts": {
-        "start": "if test -d ~/Documents/barber-time/Server/dist; then rm -R ./dist; fi; tsc; node ./dist",
+        "start": "if test -d ~/Documentos/barber-time/Server/dist; then rm -R ./dist; fi; tsc; node ./dist",
         "test": "jest"
     },
     "prettier": {

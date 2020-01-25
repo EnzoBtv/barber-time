@@ -1,6 +1,7 @@
 import { Router, Request, Response } from "express";
 import { sign } from "jsonwebtoken";
 import User from "../models/User";
+import Token from "../models/Token";
 
 import { Status } from "../constants/Status";
 
@@ -71,10 +72,12 @@ export default class AddressController {
                 }
             );
 
-            const tokenDb = await user.createTokens({
+            const tokenDb = await Token.create({
                 ip,
                 token
             });
+
+            await user.addToken(tokenDb);
 
             if (!tokenDb) {
                 logger.error(
