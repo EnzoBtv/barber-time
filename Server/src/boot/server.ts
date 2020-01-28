@@ -1,5 +1,7 @@
 import Express, { Application, json } from "express";
 import { join } from "path";
+import cors from "cors";
+import morgan from "morgan";
 
 import Database from "../database";
 
@@ -7,7 +9,7 @@ import logger from "../util/Logger";
 import { execPromise as exec } from "../util/ChildPromise";
 
 export default class Server {
-    app: Application;
+    private app: Application;
     constructor() {
         this.app = Express();
     }
@@ -19,17 +21,19 @@ export default class Server {
         await this.initControllers();
     }
 
-    listen() {
+    private listen() {
         this.app.listen(process.env.PORT, () => {
             logger.info(`App listening on port ${process.env.PORT}`);
         });
     }
 
-    async initMiddlewares() {
+    private async initMiddlewares() {
         this.app.use(json());
+        this.app.use(cors());
+        this.app.use(morgan("combined"));
     }
 
-    async initControllers() {
+    private async initControllers() {
         try {
             logger.info("Trying no initialize all controllers");
             const controllers = await exec(

@@ -11,6 +11,7 @@
         "dotenv": "^8.2.0",
         "express": "^4.17.1",
         "jsonwebtoken": "^8.5.1",
+        "morgan": "^1.9.1",
         "pg": "^7.17.1",
         "pg-hstore": "^2.3.3",
         "request": "^2.88.0",
@@ -19,18 +20,21 @@
         "winston": "^3.2.1"
     },
     "devDependencies": {
+        "@types/cors": "^2.8.6",
         "@types/express": "^4.17.2",
         "@types/jest": "^24.9.1",
         "@types/jsonwebtoken": "^8.3.7",
+        "@types/morgan": "^1.7.37",
         "@types/node": "^13.1.8",
         "@types/request": "^2.48.4",
         "@types/request-promise": "^4.1.45",
         "@types/sequelize": "^4.28.8",
         "sequelize-cli": "^3.2.0-c",
+        "ts-node": "^8.6.2",
         "typescript": "^3.7.5"
     },
     "scripts": {
-        "start": "if test -d ~/Documentos/barber-time/Server/dist; then rm -R ./dist; fi; tsc; node ./dist",
+        "start": "if test -d ~/Documentos/barber-time/Server/dist; then rm -R ./dist; fi; tsc; nodemon ./dist",
         "test": "jest"
     },
     "prettier": {
