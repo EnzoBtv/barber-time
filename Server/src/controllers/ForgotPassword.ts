@@ -7,10 +7,9 @@ import { TokenType, createOrUpdateToken } from "../typings/Token";
 import { IController } from "../typings/Controller";
 
 const { BAD_REQUEST, SUCCESS, INTERNAL_SERVER_ERROR, NOT_FOUND } = Status;
-const { AUTH } = TokenType;
+const { RECOVER_PASSWORD } = TokenType;
 
 import logger from "../util/Logger";
-import Password from "../typings/Password";
 
 export default class AddressController implements IController {
     router: Router;
@@ -27,13 +26,15 @@ export default class AddressController implements IController {
 
     async store(req: Request, res: Response) {
         try {
-            const { email, password } = req.body;
+            const { email } = req.body;
 
             const ip =
                 req.header("x-forwarded-for") || req.connection.remoteAddress;
 
-            if (!email || !password) {
-                logger.error("Error creating session, missing parameters");
+            if (!email) {
+                logger.error(
+                    "ForgotPassword creation failed, missing parameters"
+                );
                 return res.status(BAD_REQUEST).json({
                     error: "Estão faltando parâmetros na requisição"
                 });
@@ -47,29 +48,17 @@ export default class AddressController implements IController {
 
             if (!user) {
                 logger.error(
-                    `Error creating session, user not found for email ${email}`
+                    `ForgotPassword creation failed, user not found for email ${email}`
                 );
                 return res.status(NOT_FOUND).json({
                     error: "Email não cadastrado no sistema"
                 });
             }
 
-            if (!new Password(password, user.password).checkEquality()) {
-                logger.error(
-                    `Error creating session, incorrect password for email ${email}`
-                );
-                return res.status(BAD_REQUEST).json({
-                    error: "Senha incorreta, por favor, tente novamente"
-                });
-            }
-
-            const token = createOrUpdateToken(
-                {
-                    id: user.id,
-                    email: user.email
-                },
+            const token = await createOrUpdateToken(
+                { id: user.id },
                 user,
-                AUTH,
+                RECOVER_PASSWORD,
                 ip
             );
 
