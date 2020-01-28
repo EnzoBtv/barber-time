@@ -10,6 +10,7 @@ const { BAD_REQUEST, SUCCESS, INTERNAL_SERVER_ERROR, NOT_FOUND } = Status;
 const { RECOVER_PASSWORD } = TokenType;
 
 import logger from "../util/Logger";
+import Mailer from "../util/Email";
 
 export default class AddressController implements IController {
     router: Router;
@@ -61,6 +62,27 @@ export default class AddressController implements IController {
                 RECOVER_PASSWORD,
                 ip
             );
+
+            await new Mailer(
+                user.email,
+                "Recuperação de senha Barber Time",
+                "",
+                `<h1>
+                    Olá ${user.name}, tudo bem?
+                </h1>
+                <p>
+                    Parece que você solicitou uma recuperação de senha, 
+                    clique no link a seguir para continuar com o processo:
+
+                    <a href="${process.env.FRONT_URL}/reset/password/${token}">Clique aqui</a>
+                </p>
+                <br />
+                <br />
+                <p>
+                    Sinta-se a vontade para responder esse email. 
+                    E se você não pediu a recuperação de senha, apenas ignore esse email
+                </p>`
+            ).send();
 
             return res.status(SUCCESS).json({ token });
         } catch (ex) {

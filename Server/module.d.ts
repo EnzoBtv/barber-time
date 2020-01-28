@@ -5,6 +5,7 @@ declare namespace NodeJS {
         CORES: string;
         EMAIL_USER: string;
         EMAIL_PASSWORD: string;
+        FRONT_URL: string;
     }
 }
 
