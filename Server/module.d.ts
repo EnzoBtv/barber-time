@@ -2,6 +2,7 @@ declare namespace NodeJS {
     export interface ProcessEnv {
         PORT: string;
         CLIENT_SECRET: string;
+        CORES: string;
     }
 }
 

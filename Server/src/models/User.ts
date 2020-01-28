@@ -2,6 +2,7 @@ import {
     Model,
     DataTypes,
     Association,
+    Sequelize,
     HasManyGetAssociationsMixin,
     HasManyAddAssociationMixin,
     HasManyHasAssociationMixin,
@@ -11,7 +12,6 @@ import {
 
 import Address from "./Address";
 import Token from "./Token";
-import connection from "../database";
 
 export default class User extends Model {
     public id!: number;
@@ -42,48 +42,52 @@ export default class User extends Model {
         addresses: Association<User, Address>;
         tokens: Association<User, Token>;
     };
-}
 
-User.init(
-    {
-        id: {
-            primaryKey: true,
-            type: DataTypes.INTEGER,
-            autoIncrement: true,
-            allowNull: false
-        },
-        name: {
-            type: DataTypes.STRING,
-            allowNull: false
-        },
-        email: {
-            type: DataTypes.STRING,
-            allowNull: false
-        },
-        password: {
-            type: DataTypes.STRING,
-            allowNull: false
-        },
-        type: {
-            type: DataTypes.ENUM,
-            allowNull: false,
-            values: ["barber", "client"]
-        }
-    },
-    {
-        sequelize: connection,
-        tableName: "users"
+    static async initModel(connection: Sequelize) {
+        User.init(
+            {
+                id: {
+                    primaryKey: true,
+                    type: DataTypes.INTEGER,
+                    autoIncrement: true,
+                    allowNull: false
+                },
+                name: {
+                    type: DataTypes.STRING,
+                    allowNull: false
+                },
+                email: {
+                    type: DataTypes.STRING,
+                    allowNull: false
+                },
+                password: {
+                    type: DataTypes.STRING,
+                    allowNull: false
+                },
+                type: {
+                    type: DataTypes.ENUM,
+                    allowNull: false,
+                    values: ["barber", "client"]
+                }
+            },
+            {
+                sequelize: connection,
+                tableName: "users"
+            }
+        );
     }
-);
 
-User.hasMany(Address, {
-    sourceKey: "id",
-    foreignKey: "user_id",
-    as: "addresses"
-});
+    static async associate(models: any) {
+        User.hasMany(models.Address, {
+            sourceKey: "id",
+            foreignKey: "user_id",
+            as: "addresses"
+        });
 
-User.hasMany(Token, {
-    sourceKey: "id",
-    foreignKey: "user_id",
-    as: "tokens"
-});
+        User.hasMany(models.Token, {
+            sourceKey: "id",
+            foreignKey: "user_id",
+            as: "tokens"
+        });
+    }
+}

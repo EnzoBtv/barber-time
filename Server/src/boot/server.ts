@@ -1,5 +1,8 @@
 import Express, { Application, json } from "express";
 import { join } from "path";
+
+import Database from "../database";
+
 import logger from "../util/Logger";
 import { execPromise as exec } from "../util/ChildPromise";
 
@@ -7,11 +10,13 @@ export default class Server {
     app: Application;
     constructor() {
         this.app = Express();
-        (async () => {
-            this.listen();
-            this.initMiddlewares();
-            await this.initControllers();
-        })();
+    }
+
+    async init() {
+        await new Database().init();
+        this.listen();
+        this.initMiddlewares();
+        await this.initControllers();
     }
 
     listen() {
