@@ -3,6 +3,8 @@ declare namespace NodeJS {
         PORT: string;
         CLIENT_SECRET: string;
         CORES: string;
+        EMAIL_USER: string;
+        EMAIL_PASSWORD: string;
     }
 }
 
