@@ -1,16 +1,23 @@
 import { Router, Request, Response } from "express";
-
+import { verify } from "jsonwebtoken";
 import User from "../models/User";
 
 import { Status } from "../typings/Status";
-import { TokenType, createOrUpdateToken } from "../typings/Token";
+import { TokenType, TokenObject, createOrUpdateToken } from "../typings/Token";
 import { IController } from "../typings/Controller";
 
-const { BAD_REQUEST, SUCCESS, INTERNAL_SERVER_ERROR, NOT_FOUND } = Status;
+const {
+    BAD_REQUEST,
+    SUCCESS,
+    INTERNAL_SERVER_ERROR,
+    NOT_FOUND,
+    UNAUTHORIZED
+} = Status;
 const { RECOVER_PASSWORD } = TokenType;
 
 import logger from "../util/Logger";
 import Mailer from "../util/Email";
+import Token from "../models/Token";
 
 export default class AddressController implements IController {
     router: Router;
@@ -85,6 +92,69 @@ export default class AddressController implements IController {
             ).send();
 
             return res.status(SUCCESS).json({ token });
+        } catch (ex) {
+            logger.error(`Error creating session | Error ${ex.message}`);
+            return res
+                .status(INTERNAL_SERVER_ERROR)
+                .json({ error: ex.message });
+        }
+    }
+
+    async update(req: Request, res: Response) {
+        try {
+            const { newPassword, token } = req.body;
+
+            const decodedToken = <TokenObject>(
+                verify(token, process.env.CLIENT_SECRET)
+            );
+
+            if (!decodedToken) {
+                logger.error(
+                    "ForgotPassword#update failed. Token is not valid or expired"
+                );
+
+                return res.status(UNAUTHORIZED).json({
+                    error:
+                        "O token enviado é invalido ou já expirou, peça outra recuperação de senha"
+                });
+            }
+
+            const dbToken = await Token.findOne({
+                where: {
+                    token,
+                    user_id: decodedToken.id
+                }
+            });
+
+            if (!dbToken) {
+                logger.error(
+                    "ForgotPassword#update failed. Token wasn't found in the database"
+                );
+
+                return res.status(UNAUTHORIZED).json({
+                    error:
+                        "O token enviado é invalido ou já expirou, peça outra recuperação de senha"
+                });
+            }
+            await Promise.all([
+                User.update(
+                    {
+                        password: newPassword
+                    },
+                    {
+                        where: {
+                            id: decodedToken.id
+                        }
+                    }
+                ),
+                Token.destroy({
+                    where: {
+                        id: dbToken.id
+                    }
+                })
+            ]);
+
+            return res.status(SUCCESS).json({});
         } catch (ex) {
             logger.error(`Error creating session | Error ${ex.message}`);
             return res

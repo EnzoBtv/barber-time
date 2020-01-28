@@ -6,4 +6,5 @@ export interface IController {
     store?: (req: Request, res: Response) => Promise<Response>;
     show?: (req: Request, res: Response) => Promise<Response>;
     index?: (req: Request, res: Response) => Promise<Response>;
+    update?: (req: Request, res: Response) => Promise<Response>;
 }
