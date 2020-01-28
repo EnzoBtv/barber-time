@@ -10,9 +10,6 @@ import {
     HasManyCreateAssociationMixin
 } from "sequelize";
 
-import Address from "./Address";
-import Token from "./Token";
-
 export default class User extends Model {
     public id!: number;
     public name!: string;
