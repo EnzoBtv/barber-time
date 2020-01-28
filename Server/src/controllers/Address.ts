@@ -5,6 +5,7 @@ import User from "../models/User";
 import Address from "../models/Address";
 
 import { Status } from "../typings/Status";
+import { IController } from "../typings/Controller";
 
 const { BAD_REQUEST, SUCCESS, INTERNAL_SERVER_ERROR, NOT_FOUND } = Status;
 
@@ -14,7 +15,7 @@ import logger from "../util/Logger";
 
 import { ViaCep, AddressDB } from "../typings/Address";
 
-export default class AddressController {
+export default class AddressController implements IController {
     router: Router;
     path: string;
     constructor() {
@@ -76,7 +77,7 @@ export default class AddressController {
                 });
             }
 
-            res.status(SUCCESS).json(address);
+            return res.status(SUCCESS).json(address);
         } catch (ex) {
             logger.error(`Error creating user | Error ${ex.message}`);
             return res

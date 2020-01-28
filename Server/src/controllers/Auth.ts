@@ -1,17 +1,20 @@
 import { Router, Request, Response } from "express";
 import { sign } from "jsonwebtoken";
+
 import User from "../models/User";
 import Token from "../models/Token";
 
 import { Status } from "../typings/Status";
 import { TokenType } from "../typings/Token";
+import { IController } from "../typings/Controller";
+
 const { BAD_REQUEST, SUCCESS, INTERNAL_SERVER_ERROR, NOT_FOUND } = Status;
 const { AUTH } = TokenType;
 
 import logger from "../util/Logger";
 import Password from "../util/Password";
 
-export default class AddressController {
+export default class AddressController implements IController {
     router: Router;
     path: string;
     constructor() {

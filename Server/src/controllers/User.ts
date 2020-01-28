@@ -2,13 +2,14 @@ import { Router, Request, Response } from "express";
 import User from "../models/User";
 
 import { Status } from "../typings/Status";
+import { IController } from "../typings/Controller";
 
 const { BAD_REQUEST, SUCCESS, INTERNAL_SERVER_ERROR, CONFLICT } = Status;
 
 import logger from "../util/Logger";
 import Password from "../util/Password";
 
-export default class UserController {
+export default class UserController implements IController {
     router: Router;
     path: string;
     constructor() {
