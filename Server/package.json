@@ -13,6 +13,7 @@
         "jsonwebtoken": "^8.5.1",
         "morgan": "^1.9.1",
         "nodemailer": "^6.4.2",
+        "nodemailer-express-handlebars": "^3.1.0",
         "pg": "^7.17.1",
         "pg-hstore": "^2.3.3",
         "request": "^2.88.0",
@@ -36,7 +37,7 @@
         "typescript": "^3.7.5"
     },
     "scripts": {
-        "start": "if test -d ~/Documentos/barber-time/Server/dist; then rm -R ./dist; fi; tsc; nodemon ./dist",
+        "start": "if test -d ~/Documentos/barber-time/Server/dist; then rm -R ./dist; fi; tsc; mkdir ./dist/mail; cp -R ./src/mail/* ./dist/mail; nodemon ./dist;",
         "test": "jest"
     },
     "prettier": {

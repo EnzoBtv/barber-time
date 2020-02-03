@@ -19,11 +19,11 @@ import logger from "../util/Logger";
 import Mailer from "../util/Email";
 import Token from "../models/Token";
 
-export default class AddressController implements IController {
+export default class ForgotPasswordController implements IController {
     router: Router;
     path: string;
     constructor() {
-        this.path = "/auth";
+        this.path = "/password";
         this.router = Router();
         this.init();
     }
@@ -73,22 +73,12 @@ export default class AddressController implements IController {
             await new Mailer(
                 user.email,
                 "Recuperação de senha Barber Time",
-                "",
-                `<h1>
-                    Olá ${user.name}, tudo bem?
-                </h1>
-                <p>
-                    Parece que você solicitou uma recuperação de senha, 
-                    clique no link a seguir para continuar com o processo:
-
-                    <a href="${process.env.FRONT_URL}/reset/password/${token}">Clique aqui</a>
-                </p>
-                <br />
-                <br />
-                <p>
-                    Sinta-se a vontade para responder esse email. 
-                    E se você não pediu a recuperação de senha, apenas ignore esse email
-                </p>`
+                "forgotPassword",
+                {
+                    name: user.name,
+                    front_url: process.env.FRONT_URL,
+                    token
+                }
             ).send();
 
             return res.status(SUCCESS).json({ token });
