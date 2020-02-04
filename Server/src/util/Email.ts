@@ -1,20 +1,19 @@
 import { createTransport } from "nodemailer";
-import { resolve } from "path"
+import { resolve } from "path";
 //@ts-ignore
-import hbs from "nodemailer-express-handlebars"
+import hbs from "nodemailer-express-handlebars";
 import Logger from "./Logger";
-import logger from "./Logger";
 
 interface IContext {
-    [key: string]: string
+    [key: string]: string;
 }
 
 interface ISend {
-    from: string,
-    to: string,
-    subject: string,
-    template: string,
-    context: IContext
+    from: string;
+    to: string;
+    subject: string;
+    template: string;
+    context: IContext;
 }
 class Email {
     static TRANSPORTER = createTransport({
@@ -27,7 +26,7 @@ class Email {
         auth: {
             user: process.env.EMAIL_USER,
             pass: process.env.EMAIL_PASSWORD
-        },
+        }
     });
 
     to: string;
@@ -45,7 +44,7 @@ class Email {
         this.to = to;
         this.subject = subject;
         this.template = template;
-        this.context = context
+        this.context = context;
     }
     async send() {
         try {
@@ -66,15 +65,18 @@ class Email {
     }
 }
 
-Email.TRANSPORTER.use("compile", hbs({
-    viewEngine: {
-        extName: '.handlebars',
-        partialsDir: resolve(__dirname, "..", "mail"),
-        layoutsDir: resolve(__dirname, "..", "mail"),
-        defaultLayout: 'email.body.hbs',
-    },
-    viewPath: resolve(__dirname, "..", "mail"),
-    extName: '.handlebars',
-}))
+Email.TRANSPORTER.use(
+    "compile",
+    hbs({
+        viewEngine: {
+            extName: ".handlebars",
+            partialsDir: resolve(__dirname, "..", "mail"),
+            layoutsDir: resolve(__dirname, "..", "mail"),
+            defaultLayout: "email.body.hbs"
+        },
+        viewPath: resolve(__dirname, "..", "mail"),
+        extName: ".handlebars"
+    })
+);
 
-export default Email
+export default Email;
