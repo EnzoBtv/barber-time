@@ -9,6 +9,13 @@ interface IContext {
     [key: string]: string
 }
 
+interface ISend {
+    from: string,
+    to: string,
+    subject: string,
+    template: string,
+    context: IContext
+}
 class Email {
     static TRANSPORTER = createTransport({
         host: "smtp-mail.outlook.com",
@@ -46,11 +53,9 @@ class Email {
                 from: this.from,
                 to: this.to,
                 subject: this.subject,
-                //@ts-ignore
                 template: "forgotPassword",
                 context: this.context
-            });
-            logger.info(`teste ${mail}`)
+            } as ISend);
             if (mail) {
                 Logger.info("Email enviado com sucesso" + JSON.stringify(mail));
                 return mail;
