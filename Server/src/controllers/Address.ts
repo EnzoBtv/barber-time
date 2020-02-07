@@ -26,7 +26,7 @@ export default class AddressController implements IController {
 
     init() {
         this.router.post(this.path, privateRoute, this.store);
-        this.router.get(`${this.path}/cep`, privateRoute);
+        this.router.get(`${this.path}/cep`, privateRoute, this.show);
     }
 
     async store(req: Request, res: Response) {

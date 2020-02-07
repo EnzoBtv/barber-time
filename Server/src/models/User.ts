@@ -7,11 +7,17 @@ import {
     HasManyAddAssociationMixin,
     HasManyHasAssociationMixin,
     HasManyCountAssociationsMixin,
-    HasManyCreateAssociationMixin
+    HasManyCreateAssociationMixin,
+    BelongsToManyGetAssociationsMixin,
+    BelongsToManyAddAssociationMixin,
+    BelongsToManyHasAssociationMixin,
+    BelongsToManyCountAssociationsMixin,
+    BelongsToManyCreateAssociationMixin
 } from "sequelize";
 
 import Address from "./Address";
 import Token from "./Token";
+import Hour from "./Hour";
 
 export default class User extends Model {
     public id!: number;
@@ -35,12 +41,20 @@ export default class User extends Model {
     public countTokens!: HasManyCountAssociationsMixin;
     public addTokens!: HasManyCreateAssociationMixin<Token>;
 
+    public getHours!: BelongsToManyGetAssociationsMixin<Hour>;
+    public addHour!: BelongsToManyAddAssociationMixin<Hour, number>;
+    public hasHour!: BelongsToManyHasAssociationMixin<Hour, number>;
+    public countHours!: BelongsToManyCountAssociationsMixin;
+    public addHours!: BelongsToManyCreateAssociationMixin<Hour>;
+
     public readonly addresses?: Address[];
     public readonly tokens?: Token[];
+    public readonly hours?: Hour[];
 
     public static associations: {
         addresses: Association<User, Address>;
         tokens: Association<User, Token>;
+        hours: Association<User, Hour>;
     };
 
     static async initModel(connection: Sequelize) {
@@ -88,6 +102,12 @@ export default class User extends Model {
             sourceKey: "id",
             foreignKey: "user_id",
             as: "tokens"
+        });
+
+        User.belongsToMany(models.Hour, {
+            foreignKey: "user_id",
+            through: "user_hours",
+            as: "users"
         });
     }
 }
