@@ -18,7 +18,7 @@ export default class RoutineController implements IController {
     router: Router;
     path: string;
     constructor() {
-        this.path = "/schedule";
+        this.path = "/routine";
         this.router = Router();
         this.init();
     }
