@@ -27,7 +27,7 @@ export default class UserController implements IController {
             const { email, name, type, password } = req.body;
 
             if (!email || !name || !type || !password) {
-                logger.error("User creation failed, missing parameters");
+                logger.error("User#store failed due to missing parameters");
                 return res.status(BAD_REQUEST).json({
                     error: "Estão faltando parâmetros na requisição"
                 });
@@ -41,7 +41,7 @@ export default class UserController implements IController {
 
             if (oldUser) {
                 logger.error(
-                    "User creation failed, there's already an user registered with this email"
+                    "User#store failed due to there's already an user registered with this email"
                 );
                 return res.status(CONFLICT).json({
                     error:
@@ -58,7 +58,7 @@ export default class UserController implements IController {
             });
 
             if (!user) {
-                logger.error("User creation failed, database failed");
+                logger.error("User#store failed due to database failed");
                 return res.status(INTERNAL_SERVER_ERROR).json({
                     error:
                         "Não foi possível criar o usuário, por favor, entre em contato com o suporte"
@@ -67,7 +67,9 @@ export default class UserController implements IController {
 
             return res.status(SUCCESS).json(user);
         } catch (ex) {
-            logger.error(`Error creating user | Error ${ex.message}`);
+            logger.error(
+                `User#store failed | Error ${ex.message} | Stack ${ex.stack}`
+            );
             return res
                 .status(INTERNAL_SERVER_ERROR)
                 .json({ error: ex.message });

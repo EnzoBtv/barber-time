@@ -41,7 +41,7 @@ export default class ForgotPasswordController implements IController {
 
             if (!email) {
                 logger.error(
-                    "ForgotPassword creation failed, missing parameters"
+                    "ForgotPassword#store failed due to missing parameters"
                 );
                 return res.status(BAD_REQUEST).json({
                     error: "Estão faltando parâmetros na requisição"
@@ -56,7 +56,7 @@ export default class ForgotPasswordController implements IController {
 
             if (!user) {
                 logger.error(
-                    `ForgotPassword creation failed, user not found for email ${email}`
+                    `ForgotPassword#store failed due to user not found for email ${email}`
                 );
                 return res.status(NOT_FOUND).json({
                     error: "Email não cadastrado no sistema"
@@ -83,7 +83,9 @@ export default class ForgotPasswordController implements IController {
 
             return res.status(SUCCESS).json({ token });
         } catch (ex) {
-            logger.error(`Error creating session | Error ${ex.message}`);
+            logger.error(
+                `ForgotPassword#store failed | Error ${ex.message} | Stack ${ex.stack}`
+            );
             return res
                 .status(INTERNAL_SERVER_ERROR)
                 .json({ error: ex.message });
@@ -100,7 +102,7 @@ export default class ForgotPasswordController implements IController {
 
             if (!decodedToken) {
                 logger.error(
-                    "ForgotPassword#update failed. Token is not valid or expired"
+                    "ForgotPassword#update failed due to token is not valid or expired"
                 );
 
                 return res.status(UNAUTHORIZED).json({
@@ -118,7 +120,7 @@ export default class ForgotPasswordController implements IController {
 
             if (!dbToken) {
                 logger.error(
-                    "ForgotPassword#update failed. Token wasn't found in the database"
+                    "ForgotPassword#update failed due to token wasn't found in the database"
                 );
 
                 return res.status(UNAUTHORIZED).json({
@@ -146,7 +148,9 @@ export default class ForgotPasswordController implements IController {
 
             return res.status(SUCCESS).json({});
         } catch (ex) {
-            logger.error(`Error creating session | Error ${ex.message}`);
+            logger.error(
+                `ForgotPassword#update failed | Error ${ex.message} | Stack ${ex.stack}`
+            );
             return res
                 .status(INTERNAL_SERVER_ERROR)
                 .json({ error: ex.message });

@@ -42,7 +42,7 @@ export default class AddressController implements IController {
             } = req.body;
 
             if (!zipCode || !street || !number || !city || !state) {
-                logger.error("Address creation failed, missing parameters");
+                logger.error("Address#store failed due to missing parameters");
                 return res.status(BAD_REQUEST).json({
                     error: "Estão faltando parâmetros na requisição"
                 });
@@ -50,7 +50,9 @@ export default class AddressController implements IController {
             const user = await User.findByPk(id);
 
             if (!user) {
-                logger.error("Address creation failed, user not found in db");
+                logger.error(
+                    "Address#store failed due to user not found in db"
+                );
                 return res.status(NOT_FOUND).json({
                     error:
                         "Usuário não encontrado no banco de dados, por favor, entre em contato com o suporte"
@@ -69,7 +71,7 @@ export default class AddressController implements IController {
 
             if (!address) {
                 logger.error(
-                    "Address creation failed, not possible to create address"
+                    "Address#store failed due to not possible to create address"
                 );
                 return res.status(NOT_FOUND).json({
                     error:
@@ -79,7 +81,9 @@ export default class AddressController implements IController {
 
             return res.status(SUCCESS).json(address);
         } catch (ex) {
-            logger.error(`Error creating user | Error ${ex.message}`);
+            logger.error(
+                `Address#store failed | Error ${ex.message} | Stack ${ex.stack}`
+            );
             return res
                 .status(INTERNAL_SERVER_ERROR)
                 .json({ error: ex.message });
@@ -91,7 +95,7 @@ export default class AddressController implements IController {
             const { cep } = req.body;
 
             if (!cep) {
-                logger.error("CEP find failed, missing parameters");
+                logger.error("Address#show failed due to missing parameters");
                 return res.status(BAD_REQUEST).json({
                     error: "Estão faltando parâmetros na requisição"
                 });
@@ -111,7 +115,9 @@ export default class AddressController implements IController {
 
             return res.status(SUCCESS).json(responseObj);
         } catch (ex) {
-            logger.error(`CEP find failed | Error ${ex.message}`);
+            logger.error(
+                `Address#show failed | Error ${ex.message} | Stack ${ex.stack}`
+            );
             return res
                 .status(INTERNAL_SERVER_ERROR)
                 .json({ error: ex.message });

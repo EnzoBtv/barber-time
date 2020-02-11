@@ -7,11 +7,12 @@ import { Status } from "../typings/Status";
 import { IController } from "../typings/Controller";
 import { IDay } from "../typings/Day";
 
-const { BAD_REQUEST, SUCCESS, INTERNAL_SERVER_ERROR, NOT_FOUND } = Status;
+const { BAD_REQUEST, INTERNAL_SERVER_ERROR, NOT_FOUND, CREATED } = Status;
 
 import privateRoute from "../middlewares/Private";
 
 import logger from "../util/Logger";
+import User from "../models/User";
 
 export default class RoutineController implements IController {
     router: Router;
@@ -27,28 +28,48 @@ export default class RoutineController implements IController {
     }
 
     async store(req: Request, res: Response) {
-        /**
-         * Como para o estabelecimento a rotina se estabelece de segunda a segunda, os dias serão tratados como sendo de segunda a segunda
-         * e não como um mês completo.
-         */
-        const { id } = req;
-        const days: IDay = <IDay>req.body.days;
-        if (!days || !id) {
-            logger.error("Routine#store failed due to missing parameters");
-            return res
-                .status(BAD_REQUEST)
-                .json({ error: "Estão faltando parâmetros na requisição" });
-        }
+        try {
+            const { id } = req;
+            const days: IDay[] = req.body.days;
+            if (!days || !id) {
+                logger.error("Routine#store failed due to missing parameters");
+                return res
+                    .status(BAD_REQUEST)
+                    .json({ error: "Estão faltando parâmetros na requisição" });
+            }
 
-        await each(Object.keys(days), async (day: string) => {
-            await each(days[day].hours, async (hour: string) => {
-                Hour.findOrCreate({
-                    where: {
-                        day: days[day].type,
-                        hour: hour
-                    }
+            const user = await User.findByPk(id);
+
+            if (!user) {
+                logger.error("Routine#store failed due to not found user");
+
+                return res.status(NOT_FOUND).json({
+                    error:
+                        "Usuário não encontrado no banco de dados, por favor, entre em contato com o suporte"
+                });
+            }
+
+            await each(days, async (day: IDay) => {
+                await each(day.hours, async (hour: string) => {
+                    const [hourDb] = await Hour.findOrCreate({
+                        where: {
+                            day: day.type,
+                            hour: hour
+                        }
+                    });
+
+                    await user.addHour(hourDb);
                 });
             });
-        });
+
+            return res.status(CREATED).json({ success: true });
+        } catch (ex) {
+            logger.error(
+                `Routine#store failed | Error ${ex.message} | Stack ${ex.stack}`
+            );
+            return res
+                .status(INTERNAL_SERVER_ERROR)
+                .json({ error: ex.message });
+        }
     }
 }

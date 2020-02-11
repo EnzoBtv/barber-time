@@ -12,7 +12,7 @@ const { AUTH } = TokenType;
 import logger from "../util/Logger";
 import Password from "../typings/Password";
 
-export default class AddressController implements IController {
+export default class AuthController implements IController {
     router: Router;
     path: string;
     constructor() {
@@ -33,7 +33,7 @@ export default class AddressController implements IController {
                 req.header("x-forwarded-for") || req.connection.remoteAddress;
 
             if (!email || !password) {
-                logger.error("Error creating session, missing parameters");
+                logger.error("Auth#store failed due to missing parameters");
                 return res.status(BAD_REQUEST).json({
                     error: "Estão faltando parâmetros na requisição"
                 });
@@ -47,7 +47,7 @@ export default class AddressController implements IController {
 
             if (!user) {
                 logger.error(
-                    `Error creating session, user not found for email ${email}`
+                    `Auth#store failed due to user not found for email ${email}`
                 );
                 return res.status(NOT_FOUND).json({
                     error: "Email não cadastrado no sistema"
@@ -56,7 +56,7 @@ export default class AddressController implements IController {
 
             if (!new Password(password, user.password).checkEquality()) {
                 logger.error(
-                    `Error creating session, incorrect password for email ${email}`
+                    `Auth#store failed due to incorrect password for email ${email}`
                 );
                 return res.status(BAD_REQUEST).json({
                     error: "Senha incorreta, por favor, tente novamente"
@@ -75,7 +75,9 @@ export default class AddressController implements IController {
 
             return res.status(SUCCESS).json({ token });
         } catch (ex) {
-            logger.error(`Error creating session | Error ${ex.message}`);
+            logger.error(
+                `Auth#store failed | Error ${ex.message} | Stack ${ex.stack}`
+            );
             return res
                 .status(INTERNAL_SERVER_ERROR)
                 .json({ error: ex.message });
