@@ -45,7 +45,7 @@ export default class Hour extends Model {
         Hour.belongsToMany(models.User, {
             foreignKey: "hour_id",
             through: "user_hours",
-            as: "hours"
+            as: "users"
         });
     }
 }

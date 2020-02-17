@@ -44,6 +44,9 @@ export default class User extends Model {
         Appointment,
         number
     >;
+    public getEstablishmentAppointments!: HasManyGetAssociationsMixin<
+        Appointment
+    >;
     public hasAppointment!: HasManyHasAssociationMixin<Appointment, number>;
     public countAppointments!: HasManyCountAssociationsMixin;
     public addAppointments!: HasManyCreateAssociationMixin<Appointment>;
@@ -138,7 +141,7 @@ export default class User extends Model {
         User.belongsToMany(models.Hour, {
             foreignKey: "user_id",
             through: "user_hours",
-            as: "users"
+            as: "hours"
         });
     }
 }
