@@ -8,16 +8,19 @@ import {
     HasManyHasAssociationMixin,
     HasManyCountAssociationsMixin,
     HasManyCreateAssociationMixin,
+    HasManySetAssociationsMixin,
     BelongsToManyGetAssociationsMixin,
     BelongsToManyAddAssociationMixin,
     BelongsToManyHasAssociationMixin,
     BelongsToManyCountAssociationsMixin,
-    BelongsToManyCreateAssociationMixin
+    BelongsToManyCreateAssociationMixin,
+    HasMany
 } from "sequelize";
 
 import Address from "./Address";
 import Token from "./Token";
 import Hour from "./Hour";
+import Appointment from "./Appointment";
 
 export default class User extends Model {
     public id!: number;
@@ -35,6 +38,17 @@ export default class User extends Model {
     public countAddresses!: HasManyCountAssociationsMixin;
     public addAddresses!: HasManyCreateAssociationMixin<Address>;
 
+    public getAppointments!: HasManyGetAssociationsMixin<Appointment>;
+    public addAppointment!: HasManyAddAssociationMixin<Appointment, number>;
+    public addEstablishmentAppointment!: HasManyAddAssociationMixin<
+        Appointment,
+        number
+    >;
+    public hasAppointment!: HasManyHasAssociationMixin<Appointment, number>;
+    public countAppointments!: HasManyCountAssociationsMixin;
+    public addAppointments!: HasManyCreateAssociationMixin<Appointment>;
+    public setAppointments!: HasManySetAssociationsMixin<Appointment, number>;
+
     public getTokens!: HasManyGetAssociationsMixin<Token>;
     public addToken!: HasManyAddAssociationMixin<Token, number>;
     public hasToken!: HasManyHasAssociationMixin<Token, number>;
@@ -50,11 +64,16 @@ export default class User extends Model {
     public readonly addresses?: Address[];
     public readonly tokens?: Token[];
     public readonly hours?: Hour[];
+    public readonly appointments?: Appointment[];
+
+    public static Appointment: HasMany<User, Appointment>;
+    public static EstablishmentAppointment: HasMany<User, Appointment>;
 
     public static associations: {
         addresses: Association<User, Address>;
         tokens: Association<User, Token>;
         hours: Association<User, Hour>;
+        appointments: Association<User, Appointment>;
     };
 
     static async initModel(connection: Sequelize) {
@@ -102,6 +121,18 @@ export default class User extends Model {
             sourceKey: "id",
             foreignKey: "user_id",
             as: "tokens"
+        });
+
+        User.Appointment = User.hasMany(models.Appointment, {
+            sourceKey: "id",
+            foreignKey: "user_id",
+            as: "appointments"
+        });
+
+        User.EstablishmentAppointment = User.hasMany(models.Appointment, {
+            sourceKey: "id",
+            foreignKey: "establishment_id",
+            as: "establishmentAppointments"
         });
 
         User.belongsToMany(models.Hour, {

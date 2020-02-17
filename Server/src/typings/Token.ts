@@ -19,7 +19,6 @@ export async function createOrUpdateToken(
     ip: string = ""
 ) {
     const token = sign(payload, process.env.CLIENT_SECRET, { expiresIn: 3600 });
-
     const oldToken = await Token.findOne({
         where: {
             user_id: user.id,
@@ -39,5 +38,6 @@ export async function createOrUpdateToken(
 
         await user.addToken(tokenDb);
     }
+
     return token;
 }

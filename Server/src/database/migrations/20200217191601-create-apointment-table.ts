@@ -2,7 +2,7 @@
 import { QueryInterface, DataTypes } from "sequelize";
 module.exports = {
     up: (queryInterface: QueryInterface) => {
-        return queryInterface.createTable("user_hours", {
+        return queryInterface.createTable("appointments", {
             id: {
                 type: DataTypes.INTEGER,
                 autoIncrement: true,
@@ -12,17 +12,21 @@ module.exports = {
             },
             user_id: {
                 type: DataTypes.INTEGER,
-                allowNull: false,
+                allowNull: true,
                 references: { model: "users", key: "id" },
                 onUpdate: "CASCADE",
                 onDelete: "CASCADE"
             },
-            hour_id: {
+            establishment_id: {
                 type: DataTypes.INTEGER,
-                allowNull: false,
-                references: { model: "hours", key: "id" },
+                allowNull: true,
+                references: { model: "users", key: "id" },
                 onUpdate: "CASCADE",
                 onDelete: "CASCADE"
+            },
+            date: {
+                type: DataTypes.DATE,
+                allowNull: false
             },
             created_at: {
                 type: DataTypes.DATE,
@@ -36,6 +40,6 @@ module.exports = {
     },
 
     down: (queryInterface: QueryInterface) => {
-        return queryInterface.dropTable("user_hours");
+        return queryInterface.dropTable("appointments");
     }
 };

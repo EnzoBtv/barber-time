@@ -39,6 +39,6 @@ module.exports = {
     },
 
     down: (queryInterface: QueryInterface) => {
-        return queryInterface.dropTable("tokens");
+        return queryInterface.dropTable("hours");
     }
 };

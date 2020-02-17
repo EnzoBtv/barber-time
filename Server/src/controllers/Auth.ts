@@ -63,7 +63,7 @@ export default class AuthController implements IController {
                 });
             }
 
-            const token = createOrUpdateToken(
+            const token = await createOrUpdateToken(
                 {
                     id: user.id,
                     email: user.email
