@@ -6,6 +6,7 @@ declare namespace NodeJS {
         EMAIL_USER: string;
         EMAIL_PASSWORD: string;
         FRONT_URL: string;
+        SENTRY_URL: string;
     }
 }
 

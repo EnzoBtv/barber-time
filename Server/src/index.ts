@@ -1,5 +1,6 @@
 import { config } from "dotenv";
 import { join } from "path";
+import * as Sentry from "@sentry/node";
 // import { fork, isMaster, on } from "cluster";
 import logger from "./util/Logger";
 import Server from "./boot/server";
@@ -18,6 +19,9 @@ try {
     //         );
     //     });
     // } else {
+    Sentry.init({
+        dsn: process.env.SENTRY_URL
+    });
     new Server().init();
     // }
 } catch (ex) {
