@@ -24,6 +24,8 @@
         "winston": "^3.2.1"
     },
     "devDependencies": {
+        "@commitlint/cli": "^8.3.5",
+        "@commitlint/config-conventional": "^8.3.4",
         "@types/bluebird": "^3.5.29",
         "@types/cors": "^2.8.6",
         "@types/express": "^4.17.2",
@@ -35,6 +37,7 @@
         "@types/request": "^2.48.4",
         "@types/request-promise": "^4.1.45",
         "@types/sequelize": "^4.28.8",
+        "husky": "^4.2.3",
         "sequelize-cli": "^3.2.0-c",
         "ts-node": "^8.6.2",
         "typescript": "^3.7.5"
@@ -45,5 +48,10 @@
     },
     "prettier": {
         "tabWidth": 4
+    },
+    "husky": {
+        "hooks": {
+            "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+        }
     }
 }
